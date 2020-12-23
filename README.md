@@ -1,10 +1,28 @@
 # Example for [issue-318](https://github.com/jmcnamara/libxlsxwriter/issues/318)
 
+## repository content
 The repository consists only of
 1. the submodule [libxlsxwriter](https://github.com/ANaumann85/libxlsxwriter) at Release_1.0.0.
 2. one CMakeLists.txt which adds the submodule as additional folder.
+3. the demo in src/demo.c from the libxlsxwriter repository. But that serves only as an example for compiling and linking.
 
-The submodule creates a target, which represents the library xlsxwriter. But the actual name of the target is different between the first and all later cmake runs. To make that behavior clear, the CMakeLists.txt prints either "has the target xlsxwriter" (in the first run) or "has the target testIssue_318" (in the second run).
+
+## The Cause
+
+The problem can be seen with the following commands:
+```
+mkdir build
+cd build
+cmake ..
+cmake ..
+make
+```
+Due to the second cmake run, the compilation of the demo fails.
+
+## Explanations
+
+The CMakeLists.txt in the folder libxlsxwriter creates a target, which represents the library xlsxwriter. But the actual name of the target is different between the first and all later cmake runs. To make that behavior clear, the CMakeLists.txt prints either "has the target xlsxwriter" (in the first run) or "has the target testIssue_318" (in the second run).
+Hence the reference in line 15 in CMakeLists.txt does not refer  to the library 
 
 To explain that behavior, we consider the content  and the type of the variable PROJECT_NAME in two lines:
 <table >
