@@ -13,16 +13,20 @@ The problem can be seen with the following commands:
 ```
 mkdir build
 cd build
-cmake ..
-cmake ..
+cmake .. 2> err_1
+cmake .. 2> err_2
 make
 ```
-Due to the second cmake run, the compilation of the demo fails.
+Due to the second cmake run, the compilation of the demo fails with the error message
+``` 
+fatal error: xlsxwriter.h: No such file or directory 
+```
+The (error) output already give hints to the reason for the failure, namely the targets name change.
 
 ## Explanations
 
 The CMakeLists.txt in the folder libxlsxwriter creates a target, which represents the library xlsxwriter. But the actual name of the target is different between the first and all later cmake runs. To make that behavior clear, the CMakeLists.txt prints either "has the target xlsxwriter" (in the first run) or "has the target testIssue_318" (in the second run).
-Hence the reference in line 15 in CMakeLists.txt does not refer  to the library 
+Hence the reference in line 15 in CMakeLists.txt does not refer  to the target. 
 
 To explain that behavior, we consider the content  and the type of the variable PROJECT_NAME in two lines:
 <table >
